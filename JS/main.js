@@ -68,11 +68,11 @@ backToTop.addEventListener('click', () => {
 
 // ============ TYPEWRITER EFFECT ============
 const roles = [
-  'Web Developer',
-  'UI/UX Enthusiast',
-  'Python Programmer',
-  'Creative Thinker',
-  'Problem Solver'
+  'BSc Computing Student',
+  'Software Developer',
+  'Java & Python Programmer',
+  'UI/UX Designer',
+  'Creative Problem Solver'
 ];
 let roleIndex = 0;
 let charIndex = 0;
