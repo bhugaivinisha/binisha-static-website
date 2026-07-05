@@ -195,16 +195,24 @@ body {
   justify-content: space-between;
 }
 
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--clr-white);
+.logo {
+  display: flex;
+  align-items: center;
   text-decoration: none;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  transition: 0.3s ease;
 }
 
-.logo-bracket {
-  color: var(--clr-primary-light);
+.logo-text {
+  color: #ffffff;
+}
+
+.logo-dot {
+  color: #8b5cf6;
+  margin-left: 2px;
+  text-shadow: 0 0 12px rgba(139, 92, 246, .7);
 }
 
 .nav-links {
@@ -1127,6 +1135,18 @@ body {
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--clr-white);
+}
+
+.footer-logo-text {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.footer-logo-dot {
+  color: #8b5cf6;
+  margin-left: 2px;
+  text-shadow: 0 0 12px rgba(139, 92, 246, .7);
+  font-weight: 800;
 }
 
 .footer-text {
