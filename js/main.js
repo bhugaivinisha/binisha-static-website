@@ -72,7 +72,7 @@ const roles = [
   'Software Developer',
   'Java & Python Programmer',
   'UI/UX Designer',
-  'Creative Problem Solver'
+  '3D Blender Artist'
 ];
 let roleIndex = 0;
 let charIndex = 0;
@@ -80,6 +80,7 @@ let isDeleting = false;
 const typeEl = document.getElementById('typewriter');
 
 function typeWriter() {
+  if (!typeEl) return;
   const currentRole = roles[roleIndex];
   if (isDeleting) {
     typeEl.textContent = currentRole.substring(0, charIndex - 1);
@@ -136,6 +137,7 @@ document.querySelectorAll('.skill-category').forEach(cat => skillObserver.observ
 // ============ COUNTER ANIMATION ============
 function animateCounter(el) {
   const target = parseInt(el.getAttribute('data-target'));
+  if (!target) return;
   const duration = 1500;
   const step = target / (duration / 16);
   let current = 0;
@@ -209,49 +211,54 @@ const contactForm = document.getElementById('contact-form');
 const submitBtn = document.getElementById('submit-btn');
 const formSuccess = document.getElementById('form-success');
 
-contactForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-  // Validate
-  const fields = contactForm.querySelectorAll('[required]');
-  let valid = true;
-  fields.forEach(field => {
-    if (!field.value.trim()) {
-      field.style.borderColor = '#ef4444';
-      valid = false;
-    } else {
-      field.style.borderColor = '';
-    }
-    if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
-      field.style.borderColor = '#ef4444';
-      valid = false;
-    }
+    // Validate
+    const fields = contactForm.querySelectorAll('[required]');
+    let valid = true;
+    fields.forEach(field => {
+      if (!field.value.trim()) {
+        field.style.borderColor = '#ef4444';
+        valid = false;
+      } else {
+        field.style.borderColor = '';
+      }
+      if (field.type === 'email' && field.value && !isValidEmail(field.value)) {
+        field.style.borderColor = '#ef4444';
+        valid = false;
+      }
+    });
+    if (!valid) return;
+
+    // Simulate sending
+    const btnText = submitBtn.querySelector('.btn-text');
+    const btnLoader = submitBtn.querySelector('.btn-loader');
+    btnText.style.display = 'none';
+    btnLoader.style.display = 'inline';
+    submitBtn.disabled = true;
+
+    setTimeout(() => {
+      btnText.style.display = 'inline';
+      btnLoader.style.display = 'none';
+      submitBtn.disabled = false;
+      formSuccess.style.display = 'block';
+      contactForm.reset();
+      setTimeout(() => { formSuccess.style.display = 'none'; }, 5000);
+    }, 2000);
   });
-  if (!valid) return;
-
-  // Simulate sending
-  const btnText = submitBtn.querySelector('.btn-text');
-  const btnLoader = submitBtn.querySelector('.btn-loader');
-  btnText.style.display = 'none';
-  btnLoader.style.display = 'inline';
-  submitBtn.disabled = true;
-
-  setTimeout(() => {
-    btnText.style.display = 'inline';
-    btnLoader.style.display = 'none';
-    submitBtn.disabled = false;
-    formSuccess.style.display = 'block';
-    contactForm.reset();
-    setTimeout(() => { formSuccess.style.display = 'none'; }, 5000);
-  }, 2000);
-});
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 // ============ FOOTER YEAR ============
-document.getElementById('year').textContent = new Date().getFullYear();
+const yearEl = document.getElementById('year');
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
 
 // ============ SMOOTH SCROLL FOR ANCHOR LINKS ============
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -262,4 +269,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+});
+
+// ============ LIGHTBOX MODAL (BLENDER PREVIEWS) ============
+const lightboxModal = document.getElementById('lightbox-modal');
+const lightboxContent = document.getElementById('lightbox-content');
+const lightboxClose = document.getElementById('lightbox-close');
+const lightboxBackdrop = document.querySelector('.lightbox-backdrop');
+
+function openLightbox(contentHtml) {
+  if (!lightboxModal || !lightboxContent) return;
+  lightboxContent.innerHTML = contentHtml;
+  lightboxModal.classList.add('active');
+  lightboxModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  if (!lightboxModal || !lightboxContent) return;
+  lightboxModal.classList.remove('active');
+  lightboxModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  // Stop video playback if playing
+  setTimeout(() => {
+    lightboxContent.innerHTML = '';
+  }, 350);
+}
+
+// Event Delegation for View Image & Watch Animation
+document.addEventListener('click', (e) => {
+  const imgBtn = e.target.closest('.view-img-btn');
+  if (imgBtn) {
+    const imgSrc = imgBtn.getAttribute('data-img');
+    if (imgSrc) {
+      openLightbox(`<img src="${imgSrc}" alt="High-Res Blender Render" />`);
+    }
+    return;
+  }
+
+  const animBtn = e.target.closest('.watch-anim-btn');
+  if (animBtn && !animBtn.disabled) {
+    const videoSrc = animBtn.getAttribute('data-video');
+    if (videoSrc) {
+      openLightbox(`
+        <video controls autoplay loop playsinline style="width: 100%; max-height: 80vh;">
+          <source src="${videoSrc}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      `);
+    }
+    return;
+  }
+});
+
+if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && lightboxModal && lightboxModal.classList.contains('active')) {
+    closeLightbox();
+  }
 });
