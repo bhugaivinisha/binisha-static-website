@@ -138,7 +138,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
   opacity: 0;
   transition: var(--transition);
   z-index: -1;
@@ -375,9 +375,12 @@ body {
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) scale(1);
   }
+
   50% {
     transform: translateY(-25px) scale(1.06);
   }
@@ -442,8 +445,15 @@ body {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 .hero-desc {
@@ -518,7 +528,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .avatar-inner {
@@ -578,13 +590,27 @@ body {
 }
 
 @keyframes badgeFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes badgeFloat3 {
-  0%, 100% { transform: translateY(-50%); }
-  50% { transform: translateY(calc(-50% - 10px)); }
+
+  0%,
+  100% {
+    transform: translateY(-50%);
+  }
+
+  50% {
+    transform: translateY(calc(-50% - 10px));
+  }
 }
 
 .scroll-down {
@@ -617,10 +643,13 @@ body {
 }
 
 @keyframes scrollBounce {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
     opacity: 1;
   }
+
   80% {
     transform: translateY(16px);
     opacity: 0;
@@ -689,7 +718,7 @@ body {
   flex-shrink: 0;
 }
 
-.detail-item > div {
+.detail-item>div {
   display: flex;
   flex-direction: column;
 }
@@ -1101,7 +1130,7 @@ body {
   margin-bottom: 1rem;
 }
 
-.contact-info > p {
+.contact-info>p {
   color: var(--clr-text-muted);
   margin-bottom: 2rem;
   line-height: 1.85;
@@ -1138,7 +1167,7 @@ body {
   flex-shrink: 0;
 }
 
-.contact-card > div {
+.contact-card>div {
   display: flex;
   flex-direction: column;
 }
@@ -1501,9 +1530,20 @@ body {
     padding: 0.35rem 0.8rem;
   }
 
-  .badge-1 { top: -4%; left: -4%; }
-  .badge-2 { bottom: -4%; right: -4%; }
-  .badge-3, .badge-4 { display: none; }
+  .badge-1 {
+    top: -4%;
+    left: -4%;
+  }
+
+  .badge-2 {
+    bottom: -4%;
+    right: -4%;
+  }
+
+  .badge-3,
+  .badge-4 {
+    display: none;
+  }
 
   .hero-desc {
     margin: 0 auto 2rem;
