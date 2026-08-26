@@ -1,47 +1,28 @@
-// ============ NAVBAR SCROLL ============
-const navbar = document.getElementById('navbar');
-const backToTop = document.getElementById('back-to-top');
-
+// ============ NAVBAR SCROLL & BACK TO TOP ============
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
+  const navbar = document.getElementById('navbar');
+  const backToTop = document.getElementById('back-to-top');
 
   // Sticky navbar
-  navbar.classList.toggle('scrolled', scrollY > 50);
+  if (navbar) {
+    navbar.classList.toggle('scrolled', scrollY > 50);
+  }
 
   // Back to top button
-  backToTop.classList.toggle('visible', scrollY > 400);
+  if (backToTop) {
+    backToTop.classList.toggle('visible', scrollY > 400);
+  }
 
   // Active nav link highlighting
   updateActiveNavLink();
 });
 
-// ============ HAMBURGER MENU ============
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('nav-links');
-
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  navLinks.classList.toggle('open');
-});
-
-// Close menu when a link is clicked
-navLinks.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navLinks.classList.remove('open');
-  });
-});
-
-// Close menu when clicking outside
-document.addEventListener('click', (e) => {
-  if (!navbar.contains(e.target)) {
-    hamburger.classList.remove('active');
-    navLinks.classList.remove('open');
-  }
-});
-
 // ============ ACTIVE NAV LINK ============
 function updateActiveNavLink() {
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  if (currentPage.includes('portfolio.html')) return; // Keep portfolio active on portfolio.html
+
   const sections = document.querySelectorAll('section[id]');
   const navItems = document.querySelectorAll('.nav-link');
   let current = '';
@@ -53,18 +34,25 @@ function updateActiveNavLink() {
     }
   });
 
-  navItems.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === `#${current}`) {
-      link.classList.add('active');
-    }
-  });
+  if (current) {
+    navItems.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === `#${current}` || href === `index.html#${current}`) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
 }
 
 // ============ BACK TO TOP ============
-backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+const backToTopBtn = document.getElementById('back-to-top');
+if (backToTopBtn) {
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
 
 // ============ TYPEWRITER EFFECT ============
 const roles = [
@@ -170,40 +158,64 @@ if (aboutStats) counterObserver.observe(aboutStats);
 const filterBtns = document.querySelectorAll('.filter-btn');
 const projectCards = document.querySelectorAll('.project-card');
 
+function applyFilter(filter) {
+  projectCards.forEach((card, i) => {
+    const rawCategory = card.getAttribute('data-category') || '';
+    const categories = rawCategory.split(' ');
+    const matches = filter === 'all' || categories.includes(filter);
+
+    if (matches) {
+      card.style.display = 'flex';
+      card.style.animation = `none`;
+      card.classList.remove('hidden');
+      setTimeout(() => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        requestAnimationFrame(() => {
+          card.style.transition = `opacity 0.4s ease ${i * 0.05}s, transform 0.4s ease ${i * 0.05}s`;
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        });
+      }, 10);
+    } else {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(-10px)';
+      setTimeout(() => {
+        card.classList.add('hidden');
+        card.style.display = 'none';
+      }, 350);
+    }
+  });
+}
+
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     const filter = btn.getAttribute('data-filter');
-
-    projectCards.forEach((card, i) => {
-      const category = card.getAttribute('data-category');
-      const matches = filter === 'all' || category === filter;
-
-      if (matches) {
-        card.style.display = 'flex';
-        card.style.animation = `none`;
-        card.classList.remove('hidden');
-        setTimeout(() => {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(20px)';
-          requestAnimationFrame(() => {
-            card.style.transition = `opacity 0.4s ease ${i * 0.07}s, transform 0.4s ease ${i * 0.07}s`;
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          });
-        }, 10);
-      } else {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(-10px)';
-        setTimeout(() => {
-          card.classList.add('hidden');
-          card.style.display = 'none';
-        }, 350);
-      }
-    });
+    applyFilter(filter);
   });
+});
+
+// Check URL Hash on page load (e.g., #college-projects, #blender-projects, #ticora-watch)
+window.addEventListener('load', () => {
+  const hash = window.location.hash.replace('#', '');
+  if (!hash) return;
+
+  if (hash === 'college-projects' || hash === 'college' || hash === 'college-project') {
+    const btn = document.querySelector('.filter-btn[data-filter="college"]');
+    if (btn) btn.click();
+  } else if (hash === 'blender-projects' || hash === 'blender' || hash === 'blender-project') {
+    const btn = document.querySelector('.filter-btn[data-filter="blender"]');
+    if (btn) btn.click();
+  } else {
+    const targetElement = document.getElementById(hash);
+    if (targetElement) {
+      setTimeout(() => {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
 });
 
 // ============ CONTACT FORM ============
